@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+
+int a, b, v, day = 1;
+int main(){
+    cin >> a >> b >> v;
+    
+    day += (v-a)/(a-b);
+    if((v-a)%(a-b) != 0) day++;
+    if(a >= v) cout << "1";
+    else cout << day;
+
+    return 0;
+}
