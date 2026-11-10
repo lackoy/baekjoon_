@@ -1,26 +1,22 @@
-include<iostream>
-#include <vector>
+#include<iostream>
 #include <algorithm>
+#include <vector>
 #include <queue>
-using namespace std;
 
+using namespace std;
 typedef long long ll;
 typedef pair<ll, ll> pll;
 
 ll a[201010], b[201010];
-int par[201010], p[201010], goal;
+int par[201010], p[201010], T, goal, n, x, u, v;
 vector<int> e[201010];
 
 void dfs(int now, int pre){
 	p[now] = pre;
-	for(auto nxt : e[now])
-		if(nxt != pre) dfs(nxt, now);
+	for(auto nxt : e[now]) if(nxt != pre) dfs(nxt, now);
 }
 
-struct Vertex{
-	ll a; ll b;
-    int v; int sz;
-};
+struct Vertex{ ll a, ll b; int v, int sz; };
 
 struct cmp{
 	bool operator()(const Vertex& A, const Vertex& B){
@@ -33,22 +29,17 @@ struct cmp{
 
 priority_queue<Vertex, vector<Vertex>, cmp> pq;
 
-int f(int x){
-	return par[x] < 0 ? x : par[x] = f(par[x]);
-}
+int f(int x){ return par[x] < 0 ? x : par[x] = f(par[x]); }
 
 void Union(int v){
 	v = f(v);
     p[v] = f(p[v]);
-	ll aa = max(a[p[v]], a[p[v]]-b[p[v]]+a[v]);
-	ll bb = b[p[v]]+b[v]-a[p[v]]-a[v]+aa;
+	ll aa = max(a[p[v]], a[p[v]]-b[p[v]]+a[v]), bb = b[p[v]]+b[v]-a[p[v]]-a[v]+aa;
 	
 	if(b[p[v]]-a[p[v]] >= bb-aa) return;
 	
-	a[p[v]] = aa;
-	b[p[v]] = bb;
-	par[p[v]] += par[v];
-	par[v] = p[v];
+	a[p[v]] = aa; b[p[v]] = bb;
+	par[p[v]] += par[v]; par[v] = p[v];
 	if(p[v] != 1) pq.push({a[p[v]], b[p[v]], p[v], par[p[v]]});
 }
 
@@ -56,10 +47,8 @@ int main(){
     ios::sync_with_stdio(false);
 	cin.tie(0); cout.tie(0);
 
-	int T;
     cin >> T;
     while(T--){
-		int n;
         cin >> n >> goal;
 
 		for(int i = 1; i <= n; i++){
@@ -69,15 +58,15 @@ int main(){
 		}
 
 		for(int i = 1; i <= n; i++){
-			int x; cin >> x;
+			cin >> x;
 			if(x > 0) b[i] = x;
 			else a[i] = -x;
+			
 			if(i == goal) b[i] += 1234123412341234LL;
 			if(i != 1) pq.push({a[i], b[i], i, -1});
 		}
 
 		for(int i = 1; i < n; i++){
-			int u, v;
             cin >> u >> v;
 			e[u].push_back(v);
 			e[v].push_back(u);
